@@ -1,0 +1,16 @@
+{
+    "entries": [
+        {
+            "id": 1,
+            "date": "2021-01-01T07:01:00.000Z",
+            "url": "http://www.testurl1.com",
+            "password": "testurl1"
+        },
+        {
+            "id": 2,
+            "date": "2021-01-02T07:02:00.000Z",
+            "url": "http://www.testurl2.com",
+            "password": "testurl2"
+        }        
+    ]
+}
