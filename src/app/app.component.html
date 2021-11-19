@@ -7,14 +7,13 @@
         &nbsp;<i class="fas fa-key"></i>
       </li>
       <li class="nav-item">
-        <!-- <a [routerLink]="['/home']" class="nav-link">Home</a> -->
-        <a class="nav-link">Home</a>
+        <a [routerLink]="['/home']" class="nav-link">Home</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link">Login</a> <!-- FIXME toggle with property -->
+      <li *ngIf="!loginService.loggedIn" class="nav-item">
+        <a [routerLink]="['/login']" class="nav-link">Login</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link">Logout</a> <!-- FIXME toggle with property -->
+      <li *ngIf="loginService.loggedIn" class="nav-item">
+        <a [routerLink]="['/login']" class="nav-link">Logout</a>
       </li>
     </ul>
   </div>

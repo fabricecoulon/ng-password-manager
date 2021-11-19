@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from '../login.service';
 import { Entry } from '../model/entry';
 import { PasswordEntriesService } from '../password-entries.service';
 
@@ -11,16 +12,22 @@ export class HomeComponent implements OnInit {
   entries: Entry[];
   showPassword: boolean[]; 
 
-  constructor(public entriesSvc: PasswordEntriesService) { 
+  constructor(public entriesSvc: PasswordEntriesService, public loginService: LoginService) { 
     this.entries = [];
     this.showPassword = [];
   }
 
   ngOnInit(): void {
+    if (!this.loginService.loggedIn) {
+      return;
+    }
     this.updateData();
   }
 
-  updateData() {
+  updateData(): void {
+    if (!this.loginService.loggedIn) {
+      return;
+    }
     // This is equivalent to promise.then(), then do a GET
     this.entriesSvc.getEntries().subscribe( entries => {
       this.entries = entries
