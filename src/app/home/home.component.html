@@ -5,6 +5,7 @@
             <th></th>
             <th scope="col">Date</th>
             <th scope="col">URL</th>
+            <th scope="col">Username</th>
             <th scope="col">Password</th>
             <th></th>
           </tr>
@@ -16,6 +17,7 @@
                 </td>
                 <td>date1</td>
                 <td>url1</td>
+                <td>user1</td>
                 <td>****</td>
                 <td style="width:20px;">
                     <a><span><i class="fas fa-eye"></i></span></a>
@@ -27,9 +29,18 @@
                 </td>
                 <td>{{entry.date | date }}</td>
                 <td><a>{{entry.url}}</a></td>
-                <td>{{entry.password}}</td>
+                <td>{{entry.username}}</td>
+                <td>
+                    <!-- <span>{{entry.password}}</span> -->
+                    <ng-template [ngIf]="showEntryPassword(entry.id)" [ngIfElse]="passwordNotShown"> <!--*ngIf="showEntryPassword(entry.id)"-->
+                        <span>{{entry.password}}</span>
+                    </ng-template>
+                    <ng-template #passwordNotShown>
+                        <span>****</span>
+                    </ng-template>
+                </td>
                 <td style="width:20px;">
-                    <a><span><i class="fas fa-eye"></i></span></a>
+                    <a (click)="toggleShowEntryPassword(entry.id)"><span><i class="fas fa-eye"></i></span></a>
                 </td>                  
             </tr>
         </tbody>

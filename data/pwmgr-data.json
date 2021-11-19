@@ -4,12 +4,14 @@
             "id": 1,
             "date": "2021-01-01T07:01:00.000Z",
             "url": "http://www.testurl1.com",
+            "username": "user1",
             "password": "testurl1"
         },
         {
             "id": 2,
             "date": "2021-01-02T07:02:00.000Z",
             "url": "http://www.testurl2.com",
+            "username": "user2",
             "password": "testurl2"
         }        
     ]
