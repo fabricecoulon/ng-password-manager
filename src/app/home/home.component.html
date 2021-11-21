@@ -1,4 +1,7 @@
 <div class="container">
+    <div *ngIf="loginService.loggedIn" class="container">
+        <button (click)="editPasswordEntryForm()" class="btn btn-primary my-sm-5">Add New</button>
+    </div>
     <table class="table container">
         <thead>
           <tr>
@@ -25,14 +28,13 @@
             </tr> -->
             <tr *ngFor="let entry of entries">
                 <td style="width:20px;">
-                    <a><span class="detailIcon"><i class="fas fa-info-circle"></i></span></a>
+                    <a (click)="editPasswordEntryForm(entry.id)"><span class="detailIcon"><i class="fas fa-info-circle"></i></span></a>
                 </td>
                 <td>{{entry.date | date }}</td>
                 <td><a>{{entry.url}}</a></td>
                 <td>{{entry.username}}</td>
                 <td>
-                    <!-- <span>{{entry.password}}</span> -->
-                    <ng-template [ngIf]="showEntryPassword(entry.id)" [ngIfElse]="passwordNotShown"> <!--*ngIf="showEntryPassword(entry.id)"-->
+                    <ng-template [ngIf]="showEntryPassword(entry.id)" [ngIfElse]="passwordNotShown">
                         <span>{{entry.password}}</span>
                     </ng-template>
                     <ng-template #passwordNotShown>

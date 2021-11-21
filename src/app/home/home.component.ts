@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { LoginService } from '../login.service';
 import { Entry } from '../model/entry';
 import { PasswordEntriesService } from '../password-entries.service';
@@ -12,7 +13,8 @@ export class HomeComponent implements OnInit {
   entries: Entry[];
   showPassword: boolean[]; 
 
-  constructor(public entriesSvc: PasswordEntriesService, public loginService: LoginService) { 
+  constructor(public entriesSvc: PasswordEntriesService, public loginService: LoginService,
+    private router: Router) { 
     this.entries = [];
     this.showPassword = [];
   }
@@ -55,5 +57,17 @@ export class HomeComponent implements OnInit {
     let val = this.showPassword[id];
     console.log('toggleShowEntryPassword '+id+' '+val);
   }
+
+  editPasswordEntryForm(id?: number): void {
+    let id2: string = '-1';
+    if (id === undefined) {
+      console.log('editPasswordEntryForm: ' + Number(-1));
+    } else {
+      console.log('editPasswordEntryForm: ' + id);
+      id2 = String(id);
+    }
+    this.router.navigate(['/edit', id2]);
+  }
+
 
 }
