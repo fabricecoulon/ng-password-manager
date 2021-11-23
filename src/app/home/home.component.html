@@ -34,8 +34,11 @@
                 <td><a>{{entry.url}}</a></td>
                 <td>{{entry.username}}</td>
                 <td>
-                    <ng-template [ngIf]="showEntryPassword(entry.id)" [ngIfElse]="passwordNotShown">
-                        <span>{{decryptPassword(entry.password)}}</span>
+                    <!-- FIXME: Avoid calling functions inside templates inside double braces, use variables  -->
+                    <!-- <ng-template [ngIf]="showEntryPassword(entry.id)" [ngIfElse]="passwordNotShown"> -->
+                    <ng-template [ngIf]="showPassword[entry.id]" [ngIfElse]="passwordNotShown">
+                        <!-- <span>{{decryptPassword(entry.password)}}</span> -->
+                        <span>{{pwToShow[entry.id]}}</span>
                     </ng-template>
                     <ng-template #passwordNotShown>
                         <span>****</span>

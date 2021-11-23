@@ -12,12 +12,14 @@ import * as cryptojs from 'crypto-js';
 })
 export class HomeComponent implements OnInit {
   entries: Entry[];
-  showPassword: boolean[]; 
+  showPassword: boolean[];
+  pwToShow: string[];
 
   constructor(public entriesSvc: PasswordEntriesService, public loginService: LoginService,
     private router: Router) { 
     this.entries = [];
     this.showPassword = [];
+    this.pwToShow = [];
   }
 
   ngOnInit(): void {
@@ -41,14 +43,14 @@ export class HomeComponent implements OnInit {
     })
   }
 
-  showEntryPassword(id: number): boolean {
-    if (this.showPassword[id] == null) {
-      return false;
-    }
-    let val = this.showPassword[id];
-    console.log('showEntryPassword '+id+' '+val);
-    return val;
-  }
+  // showEntryPassword(id: number): boolean {
+  //   if (this.showPassword[id] == null) {
+  //     return false;
+  //   }
+  //   let val = this.showPassword[id];
+  //   console.log('showEntryPassword '+id+' '+val);
+  //   return val;
+  // }
 
   toggleShowEntryPassword(id: number): void {
     if (this.showPassword[id] == null) {
@@ -56,7 +58,16 @@ export class HomeComponent implements OnInit {
     }
     this.showPassword[id] = !this.showPassword[id];
     let val = this.showPassword[id];
+    if (this.showPassword[id]) {
+      this.pwToShow[id] = this.decryptPassword(this.getEntryById(id).password);
+    }
     console.log('toggleShowEntryPassword '+id+' '+val);
+  }
+
+  private getEntryById(aId: number): Entry {
+    let entry: Entry
+    entry = this.entries.filter(e => (e.id === aId))[0];
+    return entry;
   }
 
   editPasswordEntryForm(id?: number): void {
