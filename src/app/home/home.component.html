@@ -35,7 +35,7 @@
                 <td>{{entry.username}}</td>
                 <td>
                     <ng-template [ngIf]="showEntryPassword(entry.id)" [ngIfElse]="passwordNotShown">
-                        <span>{{entry.password}}</span>
+                        <span>{{decryptPassword(entry.password)}}</span>
                     </ng-template>
                     <ng-template #passwordNotShown>
                         <span>****</span>

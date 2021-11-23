@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as bcrypt from 'bcryptjs';  // npm i --save-dev @types/bcryptjs
 import { map, filter } from "rxjs/operators";
-import * as cryptojs from 'crypto-js';
 
 export class User {
   constructor(public username: string, public hashpass: string) {}
