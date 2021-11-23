@@ -27,9 +27,13 @@ export class LoginComponent implements OnInit {
         let user = new User(users[0].username, users[0].hashpass);
         if (this.loginService.compareStringAgainstHash(this.loginService.password, user.hashpass)) {
           this.doLogin();
+        } else {
+          console.error('Login failed for user: ', this.loginService.username);
+          // FIXME: add the reason and pass it to the error view page
+          this.router.navigate(['/error']);
         }
       } else {
-        console.error('Login failed for user: ', this.loginService.username);
+        console.error('Login failed: Unknown reason');
         // FIXME: add the reason and pass it to the error view page
         this.router.navigate(['/error']);
       }
@@ -38,7 +42,10 @@ export class LoginComponent implements OnInit {
   }
 
   private doLogin() {
+    // The server has authenticated the user
     this.loginService.loggedIn = true;
+    // Generate the secret passphrase
+    this.loginService.initSecret();
     this.router.navigate(['/home']);
   }
 
