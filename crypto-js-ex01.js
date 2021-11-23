@@ -22,7 +22,8 @@ console.log('secretPassPhrase', secretPassPhrase);
 
 let key = secretPassPhrase; // master password as secret key
 
-let txtMsg = "testurl1";
+//let txtMsg = "testurl1";  // U2FsdGVkX19etA7fv6vhGvcdygLyibluA4ynkkw6enw=
+let txtMsg = "testurl2";  // U2FsdGVkX1+BidxTT7UX3fLpaNwB4UlKzTQowZVpH8I=
 
 let encodedTxtMsg = btoa(fixedEncodeURIComponent(txtMsg));
 console.log('encodedTxtMsg', encodedTxtMsg);
