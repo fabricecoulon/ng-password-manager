@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NewPasswordEntryComponent } from './new-password-entry/new-password-entry.component';
+import { ViewErrorComponent } from './view-error/view-error.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
-    NewPasswordEntryComponent
+    NewPasswordEntryComponent,
+    ViewErrorComponent
   ],
   imports: [
     BrowserModule,

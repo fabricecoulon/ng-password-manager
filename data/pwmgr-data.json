@@ -14,5 +14,11 @@
             "username": "user2",
             "password": "testurl2"
         }        
+    ],
+    "users": [
+        {
+            "username": "fabrice",
+            "hashpass": "$2a$10$Rz0aFUvNc9DmX9Bxh75MUu9VCFJz4EzmyN/IRINKix9qw0IF/b/OW"
+        }
     ]
 }
