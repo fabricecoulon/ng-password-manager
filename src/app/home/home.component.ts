@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { LoginService } from '../login.service';
 import { Entry } from '../model/entry';
 import { PasswordEntriesService } from '../password-entries.service';
-import * as cryptojs from 'crypto-js';
 
 @Component({
   selector: 'app-home',
@@ -59,7 +58,7 @@ export class HomeComponent implements OnInit {
     this.showPassword[id] = !this.showPassword[id];
     let val = this.showPassword[id];
     if (this.showPassword[id]) {
-      this.pwToShow[id] = this.decryptPassword(this.getEntryById(id).password);
+      this.pwToShow[id] = this.entriesSvc.decryptPassword(this.getEntryById(id).password);
     }
     console.log('toggleShowEntryPassword '+id+' '+val);
   }
@@ -81,15 +80,6 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/edit', id2]);
   }
 
-  public decryptPassword(aEncryptedPassword: string): string {
-    console.log('HomeComponent : decryptPassword : aEncryptedPassword', aEncryptedPassword);
-    let secret = this.loginService.getSecret();
-    console.log('HomeComponent : decryptPassword : secret', secret);
-    let decryptedPasswordBytes = cryptojs.AES.decrypt(aEncryptedPassword, secret);
-    let decryptedPassword = decryptedPasswordBytes.toString(cryptojs.enc.Utf8);
-    let decodedPassword = decodeURIComponent(atob(decryptedPassword));
-    console.log('HomeComponent : decryptPassword : decodedPassword', decodedPassword);
-    return decodedPassword;
-  }
+
 
 }

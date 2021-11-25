@@ -2,13 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Entry } from "./model/entry";
 import { map } from "rxjs/operators";
+import { LoginService } from './login.service';
+import * as cryptojs from 'crypto-js';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PasswordEntriesService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private loginService: LoginService) { }
 
   public getEntries() {
     return this.http.get<Entry[]>('/api/entries').pipe(
@@ -35,5 +37,16 @@ export class PasswordEntriesService {
 
     ) // pipe()
   } // getEntries()
+
+  public decryptPassword(aEncryptedPassword: string): string {
+    console.log('HomeComponent : decryptPassword : aEncryptedPassword', aEncryptedPassword);
+    let secret = this.loginService.getSecret();
+    console.log('HomeComponent : decryptPassword : secret', secret);
+    let decryptedPasswordBytes = cryptojs.AES.decrypt(aEncryptedPassword, secret);
+    let decryptedPassword = decryptedPasswordBytes.toString(cryptojs.enc.Utf8);
+    let decodedPassword = decodeURIComponent(atob(decryptedPassword));
+    console.log('HomeComponent : decryptPassword : decodedPassword', decodedPassword);
+    return decodedPassword;
+  }
 
 }
