@@ -45,7 +45,12 @@
                     </ng-template>
                 </td>
                 <td style="width:20px;">
-                    <a (click)="toggleShowEntryPassword(entry.id)"><span><i class="fas fa-eye"></i></span></a>
+                    <!-- class="fas fa-eye" -->
+                    <a (click)="toggleShowEntryPassword(entry.id)"><span><i [ngClass]="{
+                        'fas': true,
+                        'fa-eye': !showPassword[entry.id],
+                        'fa-eye-slash': showPassword[entry.id]
+                    }"></i></span></a> 
                 </td>                  
             </tr>
         </tbody>
