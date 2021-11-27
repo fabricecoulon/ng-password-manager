@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { lastValueFrom } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { CanComponentDeactivate } from '../can-deactivate-guard.service';
 import { LoginService } from '../login.service';
 import { Entry } from '../model/entry';
 import { PasswordEntriesService } from '../password-entries.service';
@@ -10,7 +11,7 @@ type EntryFormModel = {
   url: string;
   username: string;
   password: string;
-  passwordVerification: string;
+  passwordVerification?: string;
 }
 
 @Component({
@@ -18,9 +19,7 @@ type EntryFormModel = {
   templateUrl: './new-password-entry.component.html',
   styleUrls: ['./new-password-entry.component.css']
 })
-export class NewPasswordEntryComponent implements OnInit {
-
-  @Output() create = new EventEmitter();
+export class NewPasswordEntryComponent implements OnInit, CanComponentDeactivate {
   
   model: EntryFormModel;
   id: number;
@@ -28,9 +27,12 @@ export class NewPasswordEntryComponent implements OnInit {
   showPasswords: boolean = false;
   passtype: string = 'password';
   btnShowText: string = 'Show';
+  isChanged: boolean = false;
+  isNewEntry: boolean = false;
 
   constructor(public loginSvc: LoginService,
     private _ActivatedRoute: ActivatedRoute,
+    private router: Router,
     private entrySvc: PasswordEntriesService) {
     this.id = Number(this._ActivatedRoute.snapshot.paramMap.get('id'));
     this.model = {
@@ -63,6 +65,7 @@ export class NewPasswordEntryComponent implements OnInit {
           return maxId;
         },0);
         console.log('NewPasswordEntryComponent : maxId', maxId);
+        this.isNewEntry = true;
         this.currentEntry = new Entry();
         this.currentEntry.id = maxId + 1;
         this.populateForm(this.currentEntry.id);
@@ -78,6 +81,11 @@ export class NewPasswordEntryComponent implements OnInit {
       password: '',
       passwordVerification: ''
     }
+    this.isChanged = false;
+    this.showPasswords = false;
+    this.passtype = 'password';
+    this.btnShowText = 'Show';
+    this.isNewEntry = false; 
   }
 
   populateForm(id: Number): void {
@@ -92,17 +100,23 @@ export class NewPasswordEntryComponent implements OnInit {
   }
 
   createOrEditEntry() {
-    console.log('this.model = ' + this.model);
-    console.log('this.id = ' + this.id);
-    let newEntry: Entry = 
+    // Read data from the model
+    if (this.model.hasOwnProperty('passwordVerification') ) {
+      delete this.model.passwordVerification;
+    }
+    let newOrChangedEntry: Entry = 
       Object.assign({}, this.model, 
         {
-          id: this.id,
+          id: this.currentEntry.id,
           date: new Date(this.model.date),
         }
       );
-    console.log(JSON.stringify(newEntry));
-    this.create.emit(newEntry);
+    console.log(JSON.stringify(newOrChangedEntry));
+    if (this.isNewEntry) {
+      this.entrySvc.saveNewEntry(newOrChangedEntry).subscribe( () => {this.router.navigate(['/home']);});
+    } else {
+      this.entrySvc.changeEntry(newOrChangedEntry).subscribe( () => {this.router.navigate(['/home']);});
+    }
   }
 
   toggleShowPasswords() {
@@ -110,6 +124,19 @@ export class NewPasswordEntryComponent implements OnInit {
     this.passtype = (this.showPasswords)?'text':'password';
     this.btnShowText = (this.showPasswords)?'Hide':'Show';
     console.log('NewPasswordEntryComponent : toggleShowPasswords : this.passtype', this.passtype);
+  }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    if (this.isChanged) {
+      const result = window.confirm('There are unsaved changes! Are you sure?');
+      return of(result);
+    }
+    return true;    
+  }
+
+  public changeHandler(event: Event) {
+    console.log('NewPasswordEntryComponent : changeHandler : event', event);
+    this.isChanged = true;
   }
 
 }

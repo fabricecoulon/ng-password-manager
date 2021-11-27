@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { CanDeactivateGuardService } from './can-deactivate-guard.service';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { NewPasswordEntryComponent } from './new-password-entry/new-password-entry.component';
@@ -24,7 +25,7 @@ import { ViewErrorComponent } from './view-error/view-error.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [CanDeactivateGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -38,6 +38,14 @@ export class PasswordEntriesService {
     ) // pipe()
   } // getEntries()
 
+  public saveNewEntry(entry: Entry) {
+    return this.http.post<Entry>('/api/entries', entry);
+  }
+
+  public changeEntry(entry: Entry) {
+    return this.http.put<Entry>(`/api/entries/${entry.id}`, entry);    
+  }
+
   public decryptPassword(aEncryptedPassword: string): string {
     console.log('HomeComponent : decryptPassword : aEncryptedPassword', aEncryptedPassword);
     let secret = this.loginService.getSecret();
