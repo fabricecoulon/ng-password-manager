@@ -14,8 +14,10 @@ export class ViewErrorComponent implements OnInit {
     console.log('ViewErrorComponent : constructor : navigation', navigation);
     if (navigation !== null) {
       const state = navigation.extras.state as {errObj: string};
-      this.errorMessage = state.errObj;
-      console.log('ViewErrorComponent : constructor : this.errorMessage', this.errorMessage);      
+      if ( (state != null) && (state.hasOwnProperty('errObj')) ) {
+        this.errorMessage = state.errObj;
+        console.log('ViewErrorComponent : constructor : this.errorMessage', this.errorMessage);
+      }
     }    
   }
 
