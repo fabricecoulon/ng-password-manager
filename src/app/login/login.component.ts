@@ -8,6 +8,7 @@ import { LoginService, User } from '../login.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  mouseOverLoginButton: boolean = false;
 
   constructor(public loginService: LoginService,
     private router: Router) {
