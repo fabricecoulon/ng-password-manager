@@ -122,7 +122,6 @@ export class NewPasswordEntryComponent implements OnInit, CanComponentDeactivate
         }
       );
     console.log(JSON.stringify(newOrChangedEntry));
-    this.resetForm();
     if (this.isNewEntry) {
       const saveNewEntry$ = this.entrySvc.saveNewEntry(newOrChangedEntry);
       saveNewEntry$.subscribe( data => this.router.navigate(['/home']) );
@@ -130,7 +129,8 @@ export class NewPasswordEntryComponent implements OnInit, CanComponentDeactivate
       const changeEntry$ = this.entrySvc.changeEntry(newOrChangedEntry);
       changeEntry$.subscribe( data => this.router.navigate(['/home']) );
     }
-  
+    // Reset the form
+    this.resetForm();
   }
 
   toggleShowPasswords() {
