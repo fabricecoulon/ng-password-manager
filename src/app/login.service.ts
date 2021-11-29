@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as bcrypt from 'bcryptjs';  // npm i --save-dev @types/bcryptjs
 import { map, filter } from "rxjs/operators";
+import { fixedEncodeURIComponent } from './utils/common';
 
 export class User {
   constructor(public username: string, public hashpass: string) {}
@@ -30,15 +31,15 @@ export class LoginService {
     console.log('bcryptPassword: ', this.passhash);
   }*/
 
-  private fixedEncodeURIComponent(astr: string): string {
+  /*private fixedEncodeURIComponent(astr: string): string {
     return encodeURIComponent(astr).replace(/[!'()*]/g, function(c) {
       return '%' + c.charCodeAt(0).toString(16).toUpperCase();
     });
-  }
+  }*/
 
   public initSecret() {
     // We need to have a secret passphrase that is at least 32 bytes long
-    this.secretPassPhrase = this.fixedEncodeURIComponent(this.password) + this.fixedEncodeURIComponent(this.username);
+    this.secretPassPhrase = fixedEncodeURIComponent(this.password) + fixedEncodeURIComponent(this.username);
     this.secretPassPhrase = btoa(this.secretPassPhrase);
     console.log('LoginService : initSecret : secretPassPhrase', this.secretPassPhrase);
     /* https://stackoverflow.com/questions/64797987/what-is-the-default-aes-config-in-crypto-js 

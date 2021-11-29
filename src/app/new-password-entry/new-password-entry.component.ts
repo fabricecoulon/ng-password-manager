@@ -100,23 +100,37 @@ export class NewPasswordEntryComponent implements OnInit, CanComponentDeactivate
   }
 
   createOrEditEntry() {
+  
     // Read data from the model
+    // 1. Validate that the password and passwordVerification fields match
     if (this.model.hasOwnProperty('passwordVerification') ) {
+      if (!(this.model.password === this.model.passwordVerification)) {
+        window.alert('The passwords (password and password verification) do not match');
+        return;
+      }
       delete this.model.passwordVerification;
+    } else {
+      window.alert('Could not verify passwords');
+      return;
     }
     let newOrChangedEntry: Entry = 
       Object.assign({}, this.model, 
         {
           id: this.currentEntry.id,
           date: new Date(this.model.date),
+          password: this.entrySvc.encryptPassword(this.model.password)
         }
       );
     console.log(JSON.stringify(newOrChangedEntry));
+    this.resetForm();
     if (this.isNewEntry) {
-      this.entrySvc.saveNewEntry(newOrChangedEntry).subscribe( () => {this.router.navigate(['/home']);});
+      const saveNewEntry$ = this.entrySvc.saveNewEntry(newOrChangedEntry);
+      saveNewEntry$.subscribe( data => this.router.navigate(['/home']) );
     } else {
-      this.entrySvc.changeEntry(newOrChangedEntry).subscribe( () => {this.router.navigate(['/home']);});
+      const changeEntry$ = this.entrySvc.changeEntry(newOrChangedEntry);
+      changeEntry$.subscribe( data => this.router.navigate(['/home']) );
     }
+  
   }
 
   toggleShowPasswords() {

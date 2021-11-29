@@ -4,6 +4,7 @@ import { Entry } from "./model/entry";
 import { map } from "rxjs/operators";
 import { LoginService } from './login.service';
 import * as cryptojs from 'crypto-js';
+import { fixedEncodeURIComponent } from './utils/common';
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +56,13 @@ export class PasswordEntriesService {
     let decodedPassword = decodeURIComponent(atob(decryptedPassword));
     console.log('HomeComponent : decryptPassword : decodedPassword', decodedPassword);
     return decodedPassword;
+  }
+
+  public encryptPassword(aPlainTextPassword: string): string {
+    let secret = this.loginService.getSecret();
+    let encodedPassword = btoa(fixedEncodeURIComponent(aPlainTextPassword));
+    let cipherText = cryptojs.AES.encrypt(encodedPassword, secret).toString();
+    return cipherText;
   }
 
 }
