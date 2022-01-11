@@ -1,13 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as bcrypt from 'bcryptjs';  // npm i --save-dev @types/bcryptjs
-import { map, filter } from "rxjs/operators";
+import { map, filter, shareReplay } from "rxjs/operators";
 import { fixedEncodeURIComponent } from './utils/common';
 
 export class User {
   constructor(public username: string, public hashpass: string) {}
 }
 
+export class JwtToken {
+  constructor(public token: string) {}
+}
 
 @Injectable({
   providedIn: 'root'
@@ -55,6 +58,14 @@ export class LoginService {
 
   public compareStringAgainstHash(aplaintext: string, ahash: string): boolean {
     return bcrypt.compareSync(aplaintext, ahash);
+  }
+
+  public authenticateUser() {
+    return this.http.post<JwtToken>('/api/authenticate', {
+      'username': this.username,
+      'password': this.password
+    }).pipe(shareReplay());
+    // We are calling shareReplay to prevent the receiver of this Observable from accidentally triggering multiple POST requests due to multiple subscriptions.
   }
 
   public getUser(username: string) {

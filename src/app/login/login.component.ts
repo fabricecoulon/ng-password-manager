@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoginService, User } from '../login.service';
+import * as moment from 'moment';
+import { LoginService, User, JwtToken } from '../login.service';
+import { parseJwt } from '../utils/common';
 
 @Component({
   selector: 'app-login',
@@ -16,10 +18,27 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.resetLocalStorageToken();
   }
 
-  login() {
-
+  setSession(token: string): void {
+    /* After decoding, you receive a standard https://jwt.io/ Jwt
+    {
+      "sub": "fabrice",
+      "exp": 1639424949,
+      "iat": 1639406949
+    }
+    */
+    let jwttoken = parseJwt(token);
+    console.log(jwttoken);
+    const subject = jwttoken.sub; // whom the token refers to
+    const expiresAt = moment().add(jwttoken.exp,'second');
+    const issuedAt = moment().add(jwttoken.iat,'second');
+    localStorage.setItem('id_token', token)
+    localStorage.setItem('subject', subject);
+    localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+    localStorage.setItem('issued_at', JSON.stringify(issuedAt.valueOf()));
+  
     // Call the LoginService service from this component / subscribe to authenticate
     // the user and password
     this.loginService.getUser(this.loginService.username).subscribe(users => {
@@ -42,6 +61,14 @@ export class LoginComponent implements OnInit {
 
   }
 
+  login() {
+
+    // https://blog.angular-university.io/angular-jwt-authentication/
+    // Call authenticate and save the JwtToken
+    this.loginService.authenticateUser().subscribe( res => this.setSession(res.token) )
+
+  }
+
   private doLogin() {
     // The server has authenticated the user
     this.loginService.loggedIn = true;
@@ -51,8 +78,29 @@ export class LoginComponent implements OnInit {
   }
 
   logout() {
+    this.resetLocalStorageToken();    
     this.loginService.loggedIn = false;
     this.router.navigate(['/login']);
+  }
+
+  private resetLocalStorageToken() {
+    localStorage.removeItem("id_token");
+    localStorage.removeItem("subject");
+    localStorage.removeItem("expires_at");
+    localStorage.removeItem("issued_at");
+  }
+
+  getExpiration() {
+    const expiration = localStorage.getItem("expires_at");
+    let expiresAt = null;
+    if (expiration != null) {
+      expiresAt = JSON.parse(expiration);
+    }
+    return moment(expiresAt);    
+  }    
+
+  isLoggedIn() {
+    return moment().isBefore(this.getExpiration());
   }
 
 }

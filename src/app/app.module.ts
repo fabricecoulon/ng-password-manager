@@ -7,6 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CanDeactivateGuardService } from './can-deactivate-guard.service';
 import { HomeComponent } from './home/home.component';
+import { HttpAuthInterceptorService } from './http-auth-interceptor.service';
 import { HttpErrorInterceptorService } from './http-error-interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { NewPasswordEntryComponent } from './new-password-entry/new-password-entry.component';
@@ -31,6 +32,11 @@ import { ViewErrorComponent } from './view-error/view-error.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpAuthInterceptorService,
       multi: true
     }
   ],
